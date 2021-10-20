@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Models.Models;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Models;
-using MySql.Data.MySqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 
 namespace DBLayer
 {
-    public class Logs
+    public class Brugere
     {
         MySqlConnection connection;
-        public Logs()
+
+        public Brugere()
         {
             connection = new MySqlConnection("server=127.0.0.1;user=root;database=flex_ultimate;port=3306;password=123;SSL Mode=None");
         }
@@ -52,10 +52,11 @@ namespace DBLayer
                 return false;
             }
         }
-        async public Task<List<Log>> GetAllLogs()
+
+        async public Task<List<Bruger>> GetAllBrugere()
         {
-            string query = "SELECT * FROM flex_ultimate.log";
-            List<Log> list = new List<Log>();
+            string query = "SELECT * FROM flex_ultimate.brugere";
+            List<Bruger> list = new List<Bruger>();
             if (await OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -63,16 +64,16 @@ namespace DBLayer
 
                 while (dataReader.Read())
                 {
-                    Log log = new Log();
+                    Bruger bruger = new Bruger();
 
-                    log.id = Convert.ToInt32(dataReader["id"]);
-                    log.brugerId = Convert.ToInt32(dataReader["brugerid"]);
-                    log.dato = (DateTime)dataReader["dato"];
-                    log.start = (TimeSpan)dataReader["start"];
-                    log.slut = (TimeSpan)dataReader["slut"];
-                    log.logtime = (TimeSpan)dataReader["logtime"];
+                    bruger.id = Convert.ToInt32(dataReader["id"]);
+                    bruger.brugerNavn = (string)dataReader["brugerNavn"];
+                    bruger.institutionsid = Convert.ToInt32(dataReader["institutionsid"]);
+                    bruger.kortnummer = (string)dataReader["kortnummer"];
+                    bruger.navn = (string)dataReader["navn"];
+                    bruger.oprettet = (DateTime)dataReader["oprettet"];
 
-                    list.Add(log);
+                    list.Add(bruger);
                 }
                 await CloseConnection();
                 return list;
@@ -83,10 +84,10 @@ namespace DBLayer
             }
         }
 
-        async public Task<Log> GetOneLog(int id)
+        async public Task<Bruger> GetOneBruger(int id)
         {
-            string query = "SELECT * FROM flex_ultimate.log WHERE id = @id";
-            Log log = new Log();
+            string query = "SELECT * FROM flex_ultimate.brugere WHERE id = @id";
+            Bruger bruger = new Bruger();
             if (await OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -96,20 +97,21 @@ namespace DBLayer
 
                 while (await dataReader.ReadAsync())
                 {
-                    log.id = Convert.ToInt32(dataReader["id"]);
-                    log.brugerId = Convert.ToInt32(dataReader["brugerid"]);
-                    log.dato = (DateTime)dataReader["dato"];
-                    log.start = (TimeSpan)dataReader["start"];
-                    log.slut = (TimeSpan)dataReader["slut"];
-                    log.logtime = (TimeSpan)dataReader["logtime"];
+                    bruger.id = Convert.ToInt32(dataReader["id"]);
+                    bruger.brugerNavn = (string)dataReader["brugerNavn"];
+                    bruger.institutionsid = Convert.ToInt32(dataReader["institutionsid"]);
+                    bruger.kortnummer = (string)dataReader["kortnummer"];
+                    bruger.navn = (string)dataReader["navn"];
+                    bruger.oprettet = (DateTime)dataReader["oprettet"];
                 }
                 await CloseConnection();
-                return log;
+                return bruger;
             }
             else
             {
-                return log;
+                return bruger;
             }
         }
+
     }
 }

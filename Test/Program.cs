@@ -10,13 +10,15 @@ namespace Test
         static async Task Main(string[] args)
         {
             Logs logs = new Logs();
-            // var some = logs.GetOneLog(2).Result;
+            var some = logs.GetOneLog(2).Result;
 
-            DatabaseContext db = new DatabaseContext();
+            Console.WriteLine(some.dato);
+
+            //DatabaseContext db = new DatabaseContext();
 
             try
             {
-                var some = await db.log.ToListAsync();
+                //var some = await db.log.ToListAsync();
                 /*
                 int max = 0;
                 foreach (var v in some)

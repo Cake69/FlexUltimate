@@ -1,19 +1,17 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Models;
-using MySql.Data.MySqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 
 namespace DBLayer
 {
-    public class Logs
+    public class Dagstatus
     {
         MySqlConnection connection;
-        public Logs()
+        public Dagstatus()
         {
             connection = new MySqlConnection("server=127.0.0.1;user=root;database=flex_ultimate;port=3306;password=123;SSL Mode=None");
         }
@@ -52,10 +50,11 @@ namespace DBLayer
                 return false;
             }
         }
-        async public Task<List<Log>> GetAllLogs()
+
+        async public Task<List<Models.Models.Dagstatus>> GetAllLogs()
         {
             string query = "SELECT * FROM flex_ultimate.log";
-            List<Log> list = new List<Log>();
+            List<Models.Models.Dagstatus> list = new List<Models.Models.Dagstatus>();
             if (await OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -63,16 +62,15 @@ namespace DBLayer
 
                 while (dataReader.Read())
                 {
-                    Log log = new Log();
+                    Models.Models.Dagstatus dagstatus = new Models.Models.Dagstatus();
 
-                    log.id = Convert.ToInt32(dataReader["id"]);
-                    log.brugerId = Convert.ToInt32(dataReader["brugerid"]);
-                    log.dato = (DateTime)dataReader["dato"];
-                    log.start = (TimeSpan)dataReader["start"];
-                    log.slut = (TimeSpan)dataReader["slut"];
-                    log.logtime = (TimeSpan)dataReader["logtime"];
+                    dagstatus.id = Convert.ToInt32(dataReader["id"]);
+                    dagstatus.adminTid = (TimeSpan)dataReader["admintid"];
+                    dagstatus.brugerId = Convert.ToInt32(dataReader["brugerid"]);
+                    dagstatus.dato = (DateTime)dataReader["dato"];
+                    dagstatus.statusId = Convert.ToInt32(dataReader["statusid"]);
 
-                    list.Add(log);
+                    list.Add(dagstatus);
                 }
                 await CloseConnection();
                 return list;
@@ -83,10 +81,10 @@ namespace DBLayer
             }
         }
 
-        async public Task<Log> GetOneLog(int id)
+        async public Task<Models.Models.Dagstatus> GetOneLog(int id)
         {
             string query = "SELECT * FROM flex_ultimate.log WHERE id = @id";
-            Log log = new Log();
+            Models.Models.Dagstatus dagstatus = new Models.Models.Dagstatus();
             if (await OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -96,19 +94,18 @@ namespace DBLayer
 
                 while (await dataReader.ReadAsync())
                 {
-                    log.id = Convert.ToInt32(dataReader["id"]);
-                    log.brugerId = Convert.ToInt32(dataReader["brugerid"]);
-                    log.dato = (DateTime)dataReader["dato"];
-                    log.start = (TimeSpan)dataReader["start"];
-                    log.slut = (TimeSpan)dataReader["slut"];
-                    log.logtime = (TimeSpan)dataReader["logtime"];
+                    dagstatus.id = Convert.ToInt32(dataReader["id"]);
+                    dagstatus.adminTid = (TimeSpan)dataReader["admintid"];
+                    dagstatus.brugerId = Convert.ToInt32(dataReader["brugerid"]);
+                    dagstatus.dato = (DateTime)dataReader["dato"];
+                    dagstatus.statusId = Convert.ToInt32(dataReader["statusid"]);
                 }
                 await CloseConnection();
-                return log;
+                return dagstatus;
             }
             else
             {
-                return log;
+                return dagstatus;
             }
         }
     }
