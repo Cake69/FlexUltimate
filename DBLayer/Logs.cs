@@ -12,11 +12,7 @@ namespace DBLayer
 {
     public class Logs
     {
-        MySqlConnection connection;
-        public Logs()
-        {
-            connection = new MySqlConnection("server=127.0.0.1;user=root;database=flex_ultimate;port=3306;password=123;SSL Mode=None");
-        }
+        MySqlConnection connection = new MySqlConnection("server=10.148.130.38;user=root;database=flex_ultimate;port=3306;password=123;SSL Mode=None");
         async Task<bool> OpenConnection()
         {
             try

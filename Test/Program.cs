@@ -9,10 +9,16 @@ namespace Test
     {
         static async Task Main(string[] args)
         {
-            Logs logs = new Logs();
-            var some = logs.GetOneLog(2).Result;
 
-            Console.WriteLine(some.dato);
+            CallFunctions call = new CallFunctions();
+            string resp = await call.FlexBip("123");
+
+            Console.WriteLine(resp);
+
+            //Logs logs = new Logs();
+            //var some = logs.GetOneLog(2).Result;
+
+            //Console.WriteLine(some.dato);
 
             //DatabaseContext db = new DatabaseContext();
 

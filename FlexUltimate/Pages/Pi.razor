@@ -1,36 +1,43 @@
 ﻿@page "/pi"
+@layout EmptyLayout
+@using Buisness
 
 <h3>Pi</h3>
 
 <title>Flex bip</title>
 
 
-<input @bind="kort" autofocus style="position: absolute; top:-50px;" />
+<input @onchange="CardScanned" autofocus @ref="firstInput" style="position: absolute; top:-50px;" />
 
 
 <h1>Pi</h1>
 <p id="te">@some</p>
-<p id="tee">@kort</p>
-<p id="teee">@last</p>
-
-<Counter/>
 
 @code {
-    private string some = "Skan dit kort";
-    private string _kort;
-    private string last;
-    private string kort {
-        get {
-            return _kort;
-        }
-        set {
-            _kort = "";
-            last = value;
-            some += "a";
-        } }
-    public void OnPost()
+    private ElementReference firstInput;
+    List<string> personer = new List<string>();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //FlexBip bip = new FlexBip();
-        //some = bip.bip(kort);
+        await firstInput.FocusAsync();
+        /*
+        if (firstRender)
+        {
+        }
+        */
     }
+    async Task CardScanned(ChangeEventArgs e)
+    {
+        Tid tid = new Tid();
+        string response = await tid.CallFlexBip(e.Value.ToString());
+        personer.Add(e.Value.ToString());
+        some = response;
+        await Task.Delay(1000);
+        personer.Remove(e.Value.ToString());
+        if (personer.Count == 0)
+        {
+            some = "Virker det?";
+        }
+    }
+
+    private string some = "Skan dit kort";
 }
